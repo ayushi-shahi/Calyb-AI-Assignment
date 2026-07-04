@@ -10,6 +10,7 @@ keyed by a content hash so edits to entities.json invalidate the cache automatic
 """
 import hashlib
 import json
+import math
 import re
 import sys
 from pathlib import Path
@@ -72,6 +73,42 @@ def stem_sequence(text):
 
 def load_entities(path=ENTITIES_PATH):
     return json.loads(Path(path).read_text(encoding="utf-8"))
+
+
+SINGLETON_IDF_WEIGHT = 0.15
+
+
+def _concept_idf_weights(entities):
+    """Downweight concepts tagged on many corpus papers (boilerplate, e.g.
+    non-exhaustive-search) relative to concepts tagged on few (distinctive, e.g.
+    proximity-graph) -- standard idf = log(N / (1 + df)), normalized to (0, 1] so a
+    plain multiply against a [0,1] lexical/embedding score stays in [0,1].
+
+    A concept tagged on 0 or 1 papers can't discriminate between abstracts -- it's
+    usually just that one paper's own introduced_by concept -- so raw idf would hand
+    it a near-max multiplier for no good reason. Those get floored to a fixed low
+    weight instead of following the formula, and are excluded when finding the max
+    for normalizing everyone else so a singleton can't skew that scale either."""
+    n_papers = len(entities["papers"])
+    doc_freq = {}
+    for p in entities["papers"]:
+        for cid in p.get("concepts") or []:
+            doc_freq[cid] = doc_freq.get(cid, 0) + 1
+
+    concept_ids = [c["id"] for c in entities["concepts"]]
+    discriminative_idf = {
+        cid: math.log(n_papers / (1 + doc_freq.get(cid, 0)))
+        for cid in concept_ids if doc_freq.get(cid, 0) >= 2
+    }
+    max_idf = max(discriminative_idf.values()) if discriminative_idf else 0.0
+
+    weights = {}
+    for cid in concept_ids:
+        if doc_freq.get(cid, 0) <= 1:
+            weights[cid] = SINGLETON_IDF_WEIGHT
+        else:
+            weights[cid] = max(0.0, discriminative_idf[cid]) / max_idf if max_idf > 0 else 1.0
+    return weights
 
 
 def _contains_phrase(sequence, phrase_tokens):
@@ -238,16 +275,22 @@ def match(abstract, entities=None, k=DEFAULT_K_PAPERS, use_embeddings=True,
             return kw
         return 0.5 * kw + 0.5 * max(0.0, emb)
 
+    idf_weight_by_concept = _concept_idf_weights(entities)
+
     candidate_concepts = []
     for c in concepts:
         kw = keyword_concept_scores.get(c["id"], 0.0)
         emb = embed_concept_scores.get(c["id"])
-        score = combine(kw, emb)
+        raw_score = combine(kw, emb)
+        idf_weight = idf_weight_by_concept.get(c["id"], 1.0)
+        score = raw_score * idf_weight
         if score > 0:
             candidate_concepts.append({
                 "id": c["id"], "name": c["name"],
                 "keyword_score": round(kw, 4),
                 "embedding_score": round(emb, 4) if emb is not None else None,
+                "raw_score": round(raw_score, 4),
+                "idf_weight": round(idf_weight, 4),
                 "score": round(score, 4),
             })
     candidate_concepts.sort(key=lambda x: -x["score"])

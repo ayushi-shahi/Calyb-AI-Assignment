@@ -1,0 +1,232 @@
+{
+  "placement": {
+    "nearest_concepts": [
+      {
+        "id": "hamming-distance",
+        "name": "Hamming Distance",
+        "score": 0.29
+      },
+      {
+        "id": "euclidean-distance",
+        "name": "Euclidean Distance",
+        "score": 0.2712
+      },
+      {
+        "id": "disk-resident-index",
+        "name": "Disk-Resident Index",
+        "score": 0.1589
+      },
+      {
+        "id": "greedy-graph-traversal",
+        "name": "Greedy Graph Traversal",
+        "score": 0.1419
+      },
+      {
+        "id": "proximity-graph",
+        "name": "Proximity Graph",
+        "score": 0.1402
+      },
+      {
+        "id": "non-exhaustive-search",
+        "name": "Non-Exhaustive Search",
+        "score": 0.1327
+      },
+      {
+        "id": "inverted-file-index",
+        "name": "Inverted File Index (IVF)",
+        "score": 0.1081
+      },
+      {
+        "id": "hash-bucket-index",
+        "name": "Hash Bucket Index",
+        "score": 0.0921
+      }
+    ],
+    "addressed_problems": [
+      {
+        "id": "search-accuracy",
+        "name": "Search Accuracy (Recall)",
+        "score": 0.3357
+      },
+      {
+        "id": "index-build-time",
+        "name": "Index Build Time",
+        "score": 0.2067
+      },
+      {
+        "id": "billion-scale-indexing",
+        "name": "Billion-Scale Indexing",
+        "score": 0.1667
+      },
+      {
+        "id": "memory-footprint",
+        "name": "Memory Footprint",
+        "score": 0.05
+      },
+      {
+        "id": "curse-of-dimensionality",
+        "name": "Curse of Dimensionality",
+        "score": 0.0286
+      }
+    ]
+  },
+  "closest_prior_work": [
+    {
+      "paper": "DiskANN : Fast Accurate Billion-point Nearest Neighbor Search on a Single Node",
+      "paper_id": "ae3db2312066a6a6696aeb7cad2778c193c017ea",
+      "relation": "already trades off on memory-footprint -- your idea may TRADES_OFF_AGAINST or ALTERNATIVE_TO this",
+      "overlap": [
+        "Disk-Resident Index",
+        "Greedy Graph Traversal",
+        "Proximity Graph"
+      ]
+    },
+    {
+      "paper": "SPANN: Highly-efficient Billion-scale Approximate Nearest Neighbor Search",
+      "paper_id": "a097fe40de3520d2b8b531f8181fa81f7ebeed3c",
+      "relation": "shares concepts with your idea -- related prior work",
+      "overlap": [
+        "Disk-Resident Index",
+        "Inverted File Index (IVF)",
+        "Non-Exhaustive Search"
+      ]
+    },
+    {
+      "paper": "A Survey on Learning to Hash",
+      "paper_id": "2d024cda9043514b9335bd1fcdc288b74983220e",
+      "relation": "shares concepts with your idea -- related prior work",
+      "overlap": [
+        "Hamming Distance",
+        "Hash Bucket Index"
+      ]
+    },
+    {
+      "paper": "Locality-sensitive hashing scheme based on p-stable distributions",
+      "paper_id": "3f1e54ed3bd801766e1897d53a9fc962524dd3c2",
+      "relation": "already trades off on memory-footprint -- your idea may TRADES_OFF_AGAINST or ALTERNATIVE_TO this",
+      "overlap": [
+        "Euclidean Distance",
+        "Hash Bucket Index"
+      ]
+    },
+    {
+      "paper": "Product Quantization for Nearest Neighbor Search",
+      "paper_id": "4748d22348e72e6e06c2476486afddbc76e5eca7",
+      "relation": "foundational for Inverted File Index (IVF) -- your idea likely EXTENDS this lineage",
+      "overlap": [
+        "Inverted File Index (IVF)",
+        "Non-Exhaustive Search"
+      ]
+    }
+  ],
+  "novelty_assessment": {
+    "overlapping_claims": [
+      "Disk-Resident Index",
+      "Euclidean Distance",
+      "Greedy Graph Traversal",
+      "Hamming Distance",
+      "Hash Bucket Index",
+      "Inverted File Index (IVF)",
+      "Non-Exhaustive Search",
+      "Proximity Graph"
+    ],
+    "apparently_novel": []
+  },
+  "known_objections": [
+    {
+      "from_paper": "DiskANN : Fast Accurate Billion-point Nearest Neighbor Search on a Single Node",
+      "axis": "memory-footprint",
+      "objection": "Moves most of the index to SSD to cut RAM at the cost of disk I/O per query."
+    },
+    {
+      "from_paper": "Multi-Probe LSH: Efficient Indexing for High-Dimensional Similarity Search",
+      "axis": "memory-footprint",
+      "objection": "Fewer hash tables (less memory) but each query probes multiple buckets (more work)."
+    },
+    {
+      "from_paper": "Additive Quantization for Extreme Vector Compression",
+      "axis": "search-accuracy",
+      "objection": "Richer codebook model lowers quantization error but makes encoding more expensive."
+    },
+    {
+      "from_paper": "Efficient and Robust Approximate Nearest Neighbor Search Using Hierarchical Navigable Small World Graphs",
+      "axis": "search-accuracy",
+      "objection": "Graph indexes keep full vectors + graph in RAM for high recall; PQ compresses at some recall cost."
+    }
+  ],
+  "suggested_reading_path": [
+    "Scalable Distributed Algorithm for Approximate Nearest Neighbor Search Problem in High Dimensional General Metric Spaces",
+    "Fast Approximate Nearest Neighbor Search With Navigating Spreading-out Graphs",
+    "DiskANN : Fast Accurate Billion-point Nearest Neighbor Search on a Single Node"
+  ]
+}
+
+======================================================================
+PLACEMENT
+======================================================================
+Nearest concepts:
+  - Hamming Distance (score=0.29)
+  - Euclidean Distance (score=0.2712)
+  - Disk-Resident Index (score=0.1589)
+  - Greedy Graph Traversal (score=0.1419)
+  - Proximity Graph (score=0.1402)
+  - Non-Exhaustive Search (score=0.1327)
+  - Inverted File Index (IVF) (score=0.1081)
+  - Hash Bucket Index (score=0.0921)
+Addressed problems:
+  - Search Accuracy (Recall) (score=0.3357)
+  - Index Build Time (score=0.2067)
+  - Billion-Scale Indexing (score=0.1667)
+  - Memory Footprint (score=0.05)
+  - Curse of Dimensionality (score=0.0286)
+
+======================================================================
+CLOSEST PRIOR WORK
+======================================================================
+- DiskANN : Fast Accurate Billion-point Nearest Neighbor Search on a Single Node
+    relation: already trades off on memory-footprint -- your idea may TRADES_OFF_AGAINST or ALTERNATIVE_TO this
+    overlap: Disk-Resident Index, Greedy Graph Traversal, Proximity Graph
+- SPANN: Highly-efficient Billion-scale Approximate Nearest Neighbor Search
+    relation: shares concepts with your idea -- related prior work
+    overlap: Disk-Resident Index, Inverted File Index (IVF), Non-Exhaustive Search
+- A Survey on Learning to Hash
+    relation: shares concepts with your idea -- related prior work
+    overlap: Hamming Distance, Hash Bucket Index
+- Locality-sensitive hashing scheme based on p-stable distributions
+    relation: already trades off on memory-footprint -- your idea may TRADES_OFF_AGAINST or ALTERNATIVE_TO this
+    overlap: Euclidean Distance, Hash Bucket Index
+- Product Quantization for Nearest Neighbor Search
+    relation: foundational for Inverted File Index (IVF) -- your idea likely EXTENDS this lineage
+    overlap: Inverted File Index (IVF), Non-Exhaustive Search
+
+======================================================================
+NOVELTY ASSESSMENT
+======================================================================
+Overlapping claims (shared with closest prior work):
+  - Disk-Resident Index
+  - Euclidean Distance
+  - Greedy Graph Traversal
+  - Hamming Distance
+  - Hash Bucket Index
+  - Inverted File Index (IVF)
+  - Non-Exhaustive Search
+  - Proximity Graph
+Apparently novel (not covered by closest prior work):
+  - (none)
+
+======================================================================
+KNOWN OBJECTIONS
+======================================================================
+- from 'DiskANN : Fast Accurate Billion-point Nearest Neighbor Search on a Single Node' on axis 'memory-footprint':
+    Moves most of the index to SSD to cut RAM at the cost of disk I/O per query.
+- from 'Multi-Probe LSH: Efficient Indexing for High-Dimensional Similarity Search' on axis 'memory-footprint':
+    Fewer hash tables (less memory) but each query probes multiple buckets (more work).
+- from 'Additive Quantization for Extreme Vector Compression' on axis 'search-accuracy':
+    Richer codebook model lowers quantization error but makes encoding more expensive.
+- from 'Efficient and Robust Approximate Nearest Neighbor Search Using Hierarchical Navigable Small World Graphs' on axis 'search-accuracy':
+    Graph indexes keep full vectors + graph in RAM for high recall; PQ compresses at some recall cost.
+
+======================================================================
+SUGGESTED READING PATH
+======================================================================
+Scalable Distributed Algorithm for Approximate Nearest Neighbor Search Problem in High Dimensional General Metric Spaces -> Fast Approximate Nearest Neighbor Search With Navigating Spreading-out Graphs -> DiskANN : Fast Accurate Billion-point Nearest Neighbor Search on a Single Node

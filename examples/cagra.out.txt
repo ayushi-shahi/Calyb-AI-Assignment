@@ -1,0 +1,211 @@
+{
+  "placement": {
+    "nearest_concepts": [
+      {
+        "id": "proximity-graph",
+        "name": "Proximity Graph",
+        "score": 0.4207
+      },
+      {
+        "id": "non-exhaustive-search",
+        "name": "Non-Exhaustive Search",
+        "score": 0.2915
+      },
+      {
+        "id": "gpu-acceleration",
+        "name": "GPU Acceleration",
+        "score": 0.256
+      },
+      {
+        "id": "disk-resident-index",
+        "name": "Disk-Resident Index",
+        "score": 0.1825
+      },
+      {
+        "id": "navigable-small-world",
+        "name": "Navigable Small World",
+        "score": 0.1657
+      },
+      {
+        "id": "inverted-file-index",
+        "name": "Inverted File Index (IVF)",
+        "score": 0.1322
+      },
+      {
+        "id": "greedy-graph-traversal",
+        "name": "Greedy Graph Traversal",
+        "score": 0.131
+      },
+      {
+        "id": "hash-bucket-index",
+        "name": "Hash Bucket Index",
+        "score": 0.1091
+      }
+    ],
+    "addressed_problems": [
+      {
+        "id": "search-accuracy",
+        "name": "Search Accuracy (Recall)",
+        "score": 0.6357
+      },
+      {
+        "id": "query-latency",
+        "name": "Query Latency",
+        "score": 0.2786
+      },
+      {
+        "id": "update-cost",
+        "name": "Update Cost",
+        "score": 0.25
+      },
+      {
+        "id": "index-build-time",
+        "name": "Index Build Time",
+        "score": 0.2467
+      },
+      {
+        "id": "billion-scale-indexing",
+        "name": "Billion-Scale Indexing",
+        "score": 0.1667
+      }
+    ]
+  },
+  "closest_prior_work": [
+    {
+      "paper": "Scalable Distributed Algorithm for Approximate Nearest Neighbor Search Problem in High Dimensional General Metric Spaces",
+      "paper_id": "cc9bf997d72be8bff24eb4db0813fca7e5570975",
+      "relation": "foundational for Navigable Small World -- your idea likely EXTENDS this lineage",
+      "overlap": [
+        "Greedy Graph Traversal",
+        "Navigable Small World",
+        "Proximity Graph"
+      ]
+    },
+    {
+      "paper": "Efficient and Robust Approximate Nearest Neighbor Search Using Hierarchical Navigable Small World Graphs",
+      "paper_id": "699a2e3b653c69aff5cf7a9923793b974f8ca164",
+      "relation": "already trades off on search-accuracy -- your idea may TRADES_OFF_AGAINST or ALTERNATIVE_TO this",
+      "overlap": [
+        "Greedy Graph Traversal",
+        "Navigable Small World",
+        "Proximity Graph"
+      ]
+    },
+    {
+      "paper": "DiskANN : Fast Accurate Billion-point Nearest Neighbor Search on a Single Node",
+      "paper_id": "ae3db2312066a6a6696aeb7cad2778c193c017ea",
+      "relation": "shares concepts with your idea -- related prior work",
+      "overlap": [
+        "Disk-Resident Index",
+        "Greedy Graph Traversal",
+        "Proximity Graph"
+      ]
+    },
+    {
+      "paper": "BANG: Billion-Scale Approximate Nearest Neighbour Search Using a Single GPU",
+      "paper_id": "b93682b58b3b9c8d33297e266c902f05a75681d8",
+      "relation": "shares concepts with your idea -- related prior work",
+      "overlap": [
+        "GPU Acceleration",
+        "Proximity Graph"
+      ]
+    },
+    {
+      "paper": "A Comprehensive Survey and Experimental Comparison of Graph-Based Approximate Nearest Neighbor Search",
+      "paper_id": "f1613881b5f90cd779bf9c8511f3af410ce49846",
+      "relation": "shares concepts with your idea -- related prior work",
+      "overlap": [
+        "Greedy Graph Traversal",
+        "Navigable Small World",
+        "Proximity Graph"
+      ]
+    }
+  ],
+  "novelty_assessment": {
+    "overlapping_claims": [
+      "Disk-Resident Index",
+      "GPU Acceleration",
+      "Greedy Graph Traversal",
+      "Navigable Small World",
+      "Proximity Graph"
+    ],
+    "apparently_novel": [
+      "Hash Bucket Index",
+      "Inverted File Index (IVF)",
+      "Non-Exhaustive Search"
+    ]
+  },
+  "known_objections": [
+    {
+      "from_paper": "Efficient and Robust Approximate Nearest Neighbor Search Using Hierarchical Navigable Small World Graphs",
+      "axis": "search-accuracy",
+      "objection": "Graph indexes keep full vectors + graph in RAM for high recall; PQ compresses at some recall cost."
+    }
+  ],
+  "suggested_reading_path": [
+    "Scalable Distributed Algorithm for Approximate Nearest Neighbor Search Problem in High Dimensional General Metric Spaces"
+  ]
+}
+
+======================================================================
+PLACEMENT
+======================================================================
+Nearest concepts:
+  - Proximity Graph (score=0.4207)
+  - Non-Exhaustive Search (score=0.2915)
+  - GPU Acceleration (score=0.256)
+  - Disk-Resident Index (score=0.1825)
+  - Navigable Small World (score=0.1657)
+  - Inverted File Index (IVF) (score=0.1322)
+  - Greedy Graph Traversal (score=0.131)
+  - Hash Bucket Index (score=0.1091)
+Addressed problems:
+  - Search Accuracy (Recall) (score=0.6357)
+  - Query Latency (score=0.2786)
+  - Update Cost (score=0.25)
+  - Index Build Time (score=0.2467)
+  - Billion-Scale Indexing (score=0.1667)
+
+======================================================================
+CLOSEST PRIOR WORK
+======================================================================
+- Scalable Distributed Algorithm for Approximate Nearest Neighbor Search Problem in High Dimensional General Metric Spaces
+    relation: foundational for Navigable Small World -- your idea likely EXTENDS this lineage
+    overlap: Greedy Graph Traversal, Navigable Small World, Proximity Graph
+- Efficient and Robust Approximate Nearest Neighbor Search Using Hierarchical Navigable Small World Graphs
+    relation: already trades off on search-accuracy -- your idea may TRADES_OFF_AGAINST or ALTERNATIVE_TO this
+    overlap: Greedy Graph Traversal, Navigable Small World, Proximity Graph
+- DiskANN : Fast Accurate Billion-point Nearest Neighbor Search on a Single Node
+    relation: shares concepts with your idea -- related prior work
+    overlap: Disk-Resident Index, Greedy Graph Traversal, Proximity Graph
+- BANG: Billion-Scale Approximate Nearest Neighbour Search Using a Single GPU
+    relation: shares concepts with your idea -- related prior work
+    overlap: GPU Acceleration, Proximity Graph
+- A Comprehensive Survey and Experimental Comparison of Graph-Based Approximate Nearest Neighbor Search
+    relation: shares concepts with your idea -- related prior work
+    overlap: Greedy Graph Traversal, Navigable Small World, Proximity Graph
+
+======================================================================
+NOVELTY ASSESSMENT
+======================================================================
+Overlapping claims (shared with closest prior work):
+  - Disk-Resident Index
+  - GPU Acceleration
+  - Greedy Graph Traversal
+  - Navigable Small World
+  - Proximity Graph
+Apparently novel (not covered by closest prior work):
+  - Hash Bucket Index
+  - Inverted File Index (IVF)
+  - Non-Exhaustive Search
+
+======================================================================
+KNOWN OBJECTIONS
+======================================================================
+- from 'Efficient and Robust Approximate Nearest Neighbor Search Using Hierarchical Navigable Small World Graphs' on axis 'search-accuracy':
+    Graph indexes keep full vectors + graph in RAM for high recall; PQ compresses at some recall cost.
+
+======================================================================
+SUGGESTED READING PATH
+======================================================================
+Scalable Distributed Algorithm for Approximate Nearest Neighbor Search Problem in High Dimensional General Metric Spaces
