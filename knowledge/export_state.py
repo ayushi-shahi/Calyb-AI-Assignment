@@ -1,5 +1,5 @@
 """Serialize the built graph to knowledge/knowledge_state.json: a flat, human-navigable
-snapshot readable without running any code (BUILD_SPEC.md section 5).
+snapshot readable without running any code.
 
     python knowledge/export_state.py
 """

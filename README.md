@@ -12,7 +12,6 @@ operational only: how to install, regenerate the knowledge state, and run querie
 ## Repo structure
 
 ```
-BUILD_SPEC.md             plumbing spec this project was built against
 approach.md                design writeup (reviewer-facing)
 requirements.txt
 

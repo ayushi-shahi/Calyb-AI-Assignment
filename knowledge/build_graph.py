@@ -1,5 +1,5 @@
 """Load knowledge/entities.json + edges.json into a NetworkX graph and compute
-the derived IS_FOUNDATIONAL_FOR relationship (BUILD_SPEC.md sections 4/6).
+the derived IS_FOUNDATIONAL_FOR relationship.
 
     python knowledge/build_graph.py
 

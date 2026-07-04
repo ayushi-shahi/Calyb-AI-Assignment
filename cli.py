@@ -1,4 +1,4 @@
-"""CLI entry point for the ANN novelty-assessment pipeline (BUILD_SPEC.md section 7).
+"""CLI entry point for the ANN novelty-assessment pipeline.
 
     python cli.py --abstract "PASTE TEXT"
     python cli.py --file path/to/abstract.txt

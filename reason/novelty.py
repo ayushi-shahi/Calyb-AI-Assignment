@@ -1,6 +1,6 @@
-"""Assemble the structured novelty assessment (BUILD_SPEC.md section 6.3 / 6 output
-schema). Every field is derived from match.py + engine.py, i.e. from the graph -- an
-LLM may later rephrase this JSON into prose, but nothing here is an LLM decision.
+"""Assemble the structured novelty assessment. Every field is derived from
+match.py + engine.py, i.e. from the graph -- an LLM may later rephrase this JSON
+into prose, but nothing here is an LLM decision.
 """
 import json
 import sys

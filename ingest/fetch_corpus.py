@@ -1,5 +1,5 @@
 """Resolve ingest/seeds.md titles to Semantic Scholar paperIds and fetch full
-paper details (BUILD_SPEC.md section 3).
+paper details.
 
     python ingest/fetch_corpus.py
 

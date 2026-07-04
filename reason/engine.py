@@ -1,4 +1,4 @@
-"""Rank prior work by EDGE SEMANTICS, not raw similarity (BUILD_SPEC.md section 6.2).
+"""Rank prior work by EDGE SEMANTICS, not raw similarity.
 
 Given match.py's output, pulls the subgraph induced by the candidate concepts
 (papers whose own concepts[] overlap) unioned with match.py's nearest_papers, then

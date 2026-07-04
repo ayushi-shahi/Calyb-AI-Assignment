@@ -1,4 +1,4 @@
-"""Map a new abstract to candidate concepts/problems/papers (BUILD_SPEC.md section 6.1).
+"""Map a new abstract to candidate concepts/problems/papers.
 
 Two signals, combined:
   (a) keyword coverage of each concept/problem's own name+definition vocabulary
