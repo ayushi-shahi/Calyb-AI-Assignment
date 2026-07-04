@@ -2,20 +2,10 @@
 
 Given match.py's output, pulls the subgraph induced by the candidate concepts
 (papers whose own concepts[] overlap) unioned with match.py's nearest_papers, then
-scores each candidate paper on three graph-derived signals:
-  - is it IS_FOUNDATIONAL_FOR one of the candidate concepts?
-  - how close is it (in EXTENDS hops) to a foundational paper for those concepts?
-  - how well did it score in match.py's own similarity/overlap signal?
-The foundational and lineage signals are computed PER CANDIDATE CONCEPT and weighted
-by that concept's own match.py score, then summed (capped at 1.0) -- so qualifying on
-a concept the abstract barely touched contributes almost nothing, and a paper only
-gets real lineage credit for being close to the foundational paper of a *strongly
-matched* concept. A flat bonus for qualifying on any concept, however weak, would let
-an unrelated-but-foundational paper outrank a strongly-overlapping one.
-It also flags candidates sitting on a TRADES_OFF_AGAINST edge whose "improves" axis
-matches one of the abstract's candidate problems -- a known objection the new idea
-will face. All of this reads off knowledge_state.json; nothing here is inferred by
-an LLM.
+scores each candidate paper on IS_FOUNDATIONAL_FOR status, EXTENDS-lineage distance
+to a foundational paper, and match.py's own similarity/overlap signal -- each scaled
+by that concept's match strength. Also flags candidates on a TRADES_OFF_AGAINST edge
+whose "improves" axis matches a candidate problem, as a known objection.
 """
 import json
 from pathlib import Path

@@ -65,6 +65,7 @@ I validated this on held-out papers not in the corpus. A GPU graph-index paper (
 - **Keyword matching has a ceiling.** On a 35-paper corpus with many singleton concepts, the exact #1 ranking is sensitive to surface-form overlap. The system reliably surfaces the right *family*, but the precise top position can wobble. Embedding-based matching is the clean fix and is the first thing I'd add.
 - **The foundational signal reflects the corpus, not the field.** HNSW doesn't register as foundational here because I didn't include its descendants — a scoping consequence, not a bug, but worth naming.
 - **Abstract coverage is partial** (20/35), which limits the embedding signal until those are backfilled.
+- **Taxonomy gaps I noticed while annotating.** While hand-annotating, I hit three spots where my taxonomy was slightly too coarse: LSH papers currently fold into a generic "hash-bucket-index" concept rather than having "locality-sensitive-hashing" as a first-class concept; ScaNN's anisotropic quantization maps onto product-quantization + inner-product rather than its own concept; and "gpu-acceleration" ended up straddling the concept and problem layers before I settled it as a concept. None broke the graph, but they're the natural next refinements to the schema and a sign of where a second annotation pass would tighten things.
 
 ## What I'd build next, and why
 

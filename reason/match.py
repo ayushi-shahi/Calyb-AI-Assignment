@@ -34,12 +34,8 @@ STOPWORDS = {
     "such", "each", "these", "also", "not", "any", "both",
 }
 
-# Ordered longest-suffix-first so e.g. "ization" is tried before the shorter "s".
-# Not a linguistically correct stemmer -- just enough surface-form normalization
-# (plurals, -ing/-ed, and the -ize/-ization family) that "neighbor"/"neighbors",
-# "graph"/"graphs", "quantize"/"quantization" collapse to the same token for
-# matching purposes. Applied identically to query and target text, so it only
-# needs to be *consistent*, not grammatically correct.
+# Ordered longest-suffix-first (e.g. "ization" before "s"). Not a real stemmer --
+# just enough surface-form normalization for consistent query/target matching.
 _STEM_RULES = sorted([
     ("ization", ""), ("isation", ""),
     ("ation", ""), ("ssion", "ss"),
@@ -79,16 +75,9 @@ SINGLETON_IDF_WEIGHT = 0.15
 
 
 def _concept_idf_weights(entities):
-    """Downweight concepts tagged on many corpus papers (boilerplate, e.g.
-    non-exhaustive-search) relative to concepts tagged on few (distinctive, e.g.
-    proximity-graph) -- standard idf = log(N / (1 + df)), normalized to (0, 1] so a
-    plain multiply against a [0,1] lexical/embedding score stays in [0,1].
-
-    A concept tagged on 0 or 1 papers can't discriminate between abstracts -- it's
-    usually just that one paper's own introduced_by concept -- so raw idf would hand
-    it a near-max multiplier for no good reason. Those get floored to a fixed low
-    weight instead of following the formula, and are excluded when finding the max
-    for normalizing everyone else so a singleton can't skew that scale either."""
+    """idf = log(N / (1 + df)), normalized to (0, 1]. Concepts tagged on 0-1 papers
+    are floored to SINGLETON_IDF_WEIGHT instead, and excluded from the max used to
+    normalize everyone else."""
     n_papers = len(entities["papers"])
     doc_freq = {}
     for p in entities["papers"]:
