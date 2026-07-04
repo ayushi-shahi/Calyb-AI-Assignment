@@ -1,0 +1,203 @@
+{
+  "edges": [
+    {
+      "src": "a85e512d8845bd007b0866b4a97e8341463f8190",
+      "rel": "EXTENDS",
+      "dst": "cc73bacd6a00442570d15e122604ad6862b8663d",
+      "evidence": "Uses multiple randomized kd-trees with automatic parameter/algorithm selection.",
+      "confidence": "high"
+    },
+    {
+      "src": "3f1e54ed3bd801766e1897d53a9fc962524dd3c2",
+      "rel": "EXTENDS",
+      "dst": "7ae42cc4b475a2192707d0ada7b3c60c347b621e",
+      "evidence": "Concrete LSH family for Euclidean space building on the original LSH framework.",
+      "confidence": "high"
+    },
+    {
+      "src": "e17529924798975856310a75cb3df3066ac7ccfa",
+      "rel": "EXTENDS",
+      "dst": "3f1e54ed3bd801766e1897d53a9fc962524dd3c2",
+      "evidence": "Improves the LSH exponent toward near-optimal for the same p-stable setting.",
+      "confidence": "high"
+    },
+    {
+      "src": "9ed960374381062d85d3944182a539c1d00f7703",
+      "rel": "EXTENDS",
+      "dst": "3f1e54ed3bd801766e1897d53a9fc962524dd3c2",
+      "evidence": "Adds probing of adjacent buckets on top of standard LSH to cut table count.",
+      "confidence": "high"
+    },
+    {
+      "src": "9ed960374381062d85d3944182a539c1d00f7703",
+      "rel": "TRADES_OFF_AGAINST",
+      "dst": "3f1e54ed3bd801766e1897d53a9fc962524dd3c2",
+      "improves": "memory-footprint",
+      "at_cost_of": "query-latency",
+      "evidence": "Fewer hash tables (less memory) but each query probes multiple buckets (more work).",
+      "confidence": "medium"
+    },
+    {
+      "src": "d4beac7746fb4a12bb04287a6638236b5ae0cfd9",
+      "rel": "EXTENDS",
+      "dst": "4748d22348e72e6e06c2476486afddbc76e5eca7",
+      "evidence": "Adds a learned rotation before PQ's subspace split to reduce quantization error.",
+      "confidence": "high"
+    },
+    {
+      "src": "05634cabe22b43fe1f0da1a0b0b2f116bffa3324",
+      "rel": "EXTENDS",
+      "dst": "d4beac7746fb4a12bb04287a6638236b5ae0cfd9",
+      "evidence": "Applies optimized PQ locally per cluster rather than globally.",
+      "confidence": "high"
+    },
+    {
+      "src": "b89abf28215fd657693d73161124cce65ec5c7a1",
+      "rel": "ALTERNATIVE_TO",
+      "dst": "4748d22348e72e6e06c2476486afddbc76e5eca7",
+      "evidence": "Represents vectors as a sum of codewords instead of a Cartesian product of subspace codes.",
+      "confidence": "high"
+    },
+    {
+      "src": "b89abf28215fd657693d73161124cce65ec5c7a1",
+      "rel": "TRADES_OFF_AGAINST",
+      "dst": "4748d22348e72e6e06c2476486afddbc76e5eca7",
+      "improves": "search-accuracy",
+      "at_cost_of": "index-build-time",
+      "evidence": "Richer codebook model lowers quantization error but makes encoding more expensive.",
+      "confidence": "medium"
+    },
+    {
+      "src": "0e2261c75bf0ac263ff4d2eaf90f996d82622633",
+      "rel": "ALTERNATIVE_TO",
+      "dst": "d4beac7746fb4a12bb04287a6638236b5ae0cfd9",
+      "evidence": "Independently derived equivalent of jointly optimizing rotation and subspace codebooks.",
+      "confidence": "medium"
+    },
+    {
+      "src": "5b81a5c1394e227cfff8406c0c4e476fd3cc4852",
+      "rel": "EXTENDS",
+      "dst": "4748d22348e72e6e06c2476486afddbc76e5eca7",
+      "evidence": "Uses a product-quantized codebook to build a fine-grained inverted index over cells.",
+      "confidence": "high"
+    },
+    {
+      "src": "08e9af046df3e3b1f7eae72d08e2b5d22e0918ea",
+      "rel": "EXTENDS",
+      "dst": "5b81a5c1394e227cfff8406c0c4e476fd3cc4852",
+      "evidence": "Revisits and improves inverted-index designs for billion-scale ANN.",
+      "confidence": "high"
+    },
+    {
+      "src": "6d6e380c5f79189db00c87cad85abea878222a55",
+      "rel": "EXTENDS",
+      "dst": "4748d22348e72e6e06c2476486afddbc76e5eca7",
+      "evidence": "Adds a re-ranking stage using source-coded residuals on top of PQ retrieval.",
+      "confidence": "high"
+    },
+    {
+      "src": "699a2e3b653c69aff5cf7a9923793b974f8ca164",
+      "rel": "EXTENDS",
+      "dst": "cc9bf997d72be8bff24eb4db0813fca7e5570975",
+      "evidence": "Adds a hierarchical multi-layer structure over NSW's flat navigable graph, giving logarithmic scaling.",
+      "confidence": "high"
+    },
+    {
+      "src": "e7e5c05e8e0a5c9740fa0114ad3a6b580da04020",
+      "rel": "EXTENDS",
+      "dst": "cc9bf997d72be8bff24eb4db0813fca7e5570975",
+      "evidence": "Builds a sparser navigating spreading-out graph refining the navigable small-world idea.",
+      "confidence": "medium"
+    },
+    {
+      "src": "b3ad93627a8eeff3030425b04248c8427fdf731a",
+      "rel": "EXTENDS",
+      "dst": "cc9bf997d72be8bff24eb4db0813fca7e5570975",
+      "evidence": "Uses kd-trees to build an initial kNN graph, then graph-based search.",
+      "confidence": "medium"
+    },
+    {
+      "src": "e7e5c05e8e0a5c9740fa0114ad3a6b580da04020",
+      "rel": "TRADES_OFF_AGAINST",
+      "dst": "699a2e3b653c69aff5cf7a9923793b974f8ca164",
+      "improves": "memory-footprint",
+      "at_cost_of": "index-build-time",
+      "evidence": "Sparser single-layer graph uses less memory than HNSW's layered graph but needs a costlier build.",
+      "confidence": "medium"
+    },
+    {
+      "src": "699a2e3b653c69aff5cf7a9923793b974f8ca164",
+      "rel": "ALTERNATIVE_TO",
+      "dst": "4748d22348e72e6e06c2476486afddbc76e5eca7",
+      "evidence": "Graph-based family vs quantization family; routinely benchmarked head-to-head.",
+      "confidence": "high"
+    },
+    {
+      "src": "699a2e3b653c69aff5cf7a9923793b974f8ca164",
+      "rel": "TRADES_OFF_AGAINST",
+      "dst": "4748d22348e72e6e06c2476486afddbc76e5eca7",
+      "improves": "search-accuracy",
+      "at_cost_of": "memory-footprint",
+      "evidence": "Graph indexes keep full vectors + graph in RAM for high recall; PQ compresses at some recall cost.",
+      "confidence": "medium"
+    },
+    {
+      "src": "ae3db2312066a6a6696aeb7cad2778c193c017ea",
+      "rel": "EXTENDS",
+      "dst": "e7e5c05e8e0a5c9740fa0114ad3a6b580da04020",
+      "evidence": "Builds a Vamana graph (NSG-lineage) engineered to run from SSD.",
+      "confidence": "medium"
+    },
+    {
+      "src": "ae3db2312066a6a6696aeb7cad2778c193c017ea",
+      "rel": "TRADES_OFF_AGAINST",
+      "dst": "699a2e3b653c69aff5cf7a9923793b974f8ca164",
+      "improves": "memory-footprint",
+      "at_cost_of": "query-latency",
+      "evidence": "Moves most of the index to SSD to cut RAM at the cost of disk I/O per query.",
+      "confidence": "medium"
+    },
+    {
+      "src": "a097fe40de3520d2b8b531f8181fa81f7ebeed3c",
+      "rel": "ALTERNATIVE_TO",
+      "dst": "ae3db2312066a6a6696aeb7cad2778c193c017ea",
+      "evidence": "Disk-based inverted-index approach to the same billion-scale/limited-RAM problem DiskANN targets with graphs.",
+      "confidence": "medium"
+    },
+    {
+      "src": "2cbb8de53759e75411bc528518947a3094fbce3a",
+      "rel": "EXTENDS",
+      "dst": "4748d22348e72e6e06c2476486afddbc76e5eca7",
+      "evidence": "GPU implementation of IVF+PQ search at billion scale.",
+      "confidence": "high"
+    },
+    {
+      "src": "37ea01066a563c661587b7c3f50fbf64d1bf311a",
+      "rel": "ALTERNATIVE_TO",
+      "dst": "4748d22348e72e6e06c2476486afddbc76e5eca7",
+      "evidence": "Anisotropic vector quantization tuned for inner-product (MIPS) rather than standard PQ.",
+      "confidence": "medium"
+    },
+    {
+      "src": "b93682b58b3b9c8d33297e266c902f05a75681d8",
+      "rel": "EXTENDS",
+      "dst": "ae3db2312066a6a6696aeb7cad2778c193c017ea",
+      "evidence": "Single-GPU billion-scale graph search in the DiskANN problem space.",
+      "confidence": "medium"
+    },
+    {
+      "src": "42bb0ac384fb87933be67f63b98d90a45d2fe6e9",
+      "rel": "APPLIES",
+      "dst": "cosine-similarity",
+      "evidence": "Hash collision probability tracks cosine similarity between vectors.",
+      "confidence": "high"
+    },
+    {
+      "src": "2cbb8de53759e75411bc528518947a3094fbce3a",
+      "rel": "COMBINES",
+      "dst": "inverted-file-index",
+      "evidence": "Combines IVF partitioning with PQ compression, GPU-accelerated.",
+      "confidence": "high"
+    }
+  ]
+}

@@ -1,0 +1,232 @@
+{
+  "_note": "Annotation draft. Papers are keyed by slug + full title (map slug -> real S2 paperId in papers.json by matching title). Confidence: high = textbook/verbatim, medium = domain inference (esp. TRADES_OFF_AGAINST). Read against the real abstracts and correct anything that reads wrong. Taxonomy gaps I hit are listed at the bottom.",
+
+  "problems": [
+    {"id": "search-accuracy", "name": "Search Accuracy (Recall)", "description": "Returning the true nearest neighbors rather than approximate misses."},
+    {"id": "query-latency", "name": "Query Latency", "description": "Answering a single query fast enough for real-time use."},
+    {"id": "memory-footprint", "name": "Memory Footprint", "description": "Fitting the index within available RAM."},
+    {"id": "index-build-time", "name": "Index Build Time", "description": "Constructing the index without excessive time or compute."},
+    {"id": "update-cost", "name": "Update Cost", "description": "Supporting inserts and deletes without rebuilding from scratch."},
+    {"id": "curse-of-dimensionality", "name": "Curse of Dimensionality", "description": "Methods degrading as vector dimensions grow into the hundreds or thousands."},
+    {"id": "billion-scale-indexing", "name": "Billion-Scale Indexing", "description": "Scaling to datasets with billions of vectors."},
+    {"id": "disk-vs-ram-constraint", "name": "Disk vs RAM Constraint", "description": "Serving datasets larger than memory using slower storage."}
+  ],
+
+  "paper_annotations": [
+    {"slug": "kdtree", "title": "Multidimensional binary search trees used for associative searching",
+     "concepts": ["kd-tree", "euclidean-distance"], "introduces": ["kd-tree"],
+     "addresses": ["query-latency"]},
+
+    {"slug": "weber-va", "title": "A quantitative analysis and performance study for similarity-search methods in high-dimensional spaces",
+     "concepts": ["kd-tree", "non-exhaustive-search"], "introduces": [],
+     "addresses": ["curse-of-dimensionality", "query-latency"]},
+
+    {"slug": "beyer-meaningful", "title": "When Is \"Nearest Neighbor\" Meaningful?",
+     "concepts": ["euclidean-distance"], "introduces": [],
+     "addresses": ["curse-of-dimensionality"]},
+
+    {"slug": "indyk-motwani", "title": "Approximate Nearest Neighbors: Towards Removing the Curse of Dimensionality",
+     "concepts": ["hash-bucket-index"], "introduces": ["hash-bucket-index"],
+     "addresses": ["curse-of-dimensionality", "query-latency"]},
+
+    {"slug": "datar-pstable", "title": "Locality-Sensitive Hashing Scheme Based on p-Stable Distributions",
+     "concepts": ["hash-bucket-index", "euclidean-distance"], "introduces": [],
+     "addresses": ["query-latency", "curse-of-dimensionality"]},
+
+    {"slug": "charikar-simhash", "title": "Similarity Estimation Techniques from Rounding Algorithms",
+     "concepts": ["hash-bucket-index", "binary-codes", "cosine-similarity"], "introduces": ["binary-codes"],
+     "addresses": ["memory-footprint", "query-latency"]},
+
+    {"slug": "andoni-indyk", "title": "Near-Optimal Hashing Algorithms for Approximate Nearest Neighbor in High Dimensions",
+     "concepts": ["hash-bucket-index"], "introduces": [],
+     "addresses": ["query-latency", "curse-of-dimensionality"]},
+
+    {"slug": "multiprobe-lsh", "title": "Multi-Probe LSH: Efficient Indexing for High-Dimensional Similarity Search",
+     "concepts": ["hash-bucket-index", "multi-probe"], "introduces": ["multi-probe"],
+     "addresses": ["memory-footprint", "query-latency"]},
+
+    {"slug": "bbit-minwise", "title": "b-Bit Minwise Hashing",
+     "concepts": ["hash-bucket-index", "binary-codes"], "introduces": [],
+     "addresses": ["memory-footprint"]},
+
+    {"slug": "learning-to-hash", "title": "A Survey on Learning to Hash",
+     "concepts": ["hash-bucket-index", "binary-codes", "hamming-distance"], "introduces": [],
+     "addresses": ["memory-footprint", "search-accuracy"]},
+
+    {"slug": "pq", "title": "Product Quantization for Nearest Neighbor Search",
+     "concepts": ["product-quantization", "asymmetric-distance-computation", "inverted-file-index", "non-exhaustive-search"],
+     "introduces": ["product-quantization", "asymmetric-distance-computation", "inverted-file-index"],
+     "addresses": ["memory-footprint", "billion-scale-indexing"]},
+
+    {"slug": "opq", "title": "Optimized Product Quantization",
+     "concepts": ["product-quantization", "optimized-product-quantization"], "introduces": ["optimized-product-quantization"],
+     "addresses": ["search-accuracy", "memory-footprint"]},
+
+    {"slug": "lopq", "title": "Locally Optimized Product Quantization for Approximate Nearest Neighbor Search",
+     "concepts": ["product-quantization", "optimized-product-quantization", "inverted-file-index"], "introduces": [],
+     "addresses": ["search-accuracy", "memory-footprint"]},
+
+    {"slug": "additive-quant", "title": "Additive Quantization for Extreme Vector Compression",
+     "concepts": ["additive-quantization", "product-quantization"], "introduces": ["additive-quantization"],
+     "addresses": ["search-accuracy", "memory-footprint"]},
+
+    {"slug": "itq", "title": "Iterative Quantization: A Procrustean Approach to Learning Binary Codes",
+     "concepts": ["binary-codes", "hamming-distance"], "introduces": [],
+     "addresses": ["memory-footprint", "search-accuracy"]},
+
+    {"slug": "cartesian-kmeans", "title": "Cartesian k-means",
+     "concepts": ["product-quantization", "optimized-product-quantization"], "introduces": [],
+     "addresses": ["search-accuracy", "memory-footprint"]},
+
+    {"slug": "vlad", "title": "Aggregating Local Image Descriptors into Compact Codes",
+     "concepts": ["product-quantization", "memory-footprint-reduction"], "introduces": [],
+     "addresses": ["memory-footprint"]},
+
+    {"slug": "low-precision-quant", "title": "Low-Precision Quantization for Efficient Nearest Neighbor Search",
+     "concepts": ["scalar-quantization", "memory-footprint-reduction"], "introduces": ["scalar-quantization"],
+     "addresses": ["memory-footprint", "query-latency"]},
+
+    {"slug": "inverted-multi-index", "title": "The Inverted Multi-Index",
+     "concepts": ["inverted-file-index", "product-quantization", "non-exhaustive-search"], "introduces": [],
+     "addresses": ["search-accuracy", "billion-scale-indexing"]},
+
+    {"slug": "revisiting-inverted", "title": "Revisiting the Inverted Indices for Billion-Scale Approximate Nearest Neighbors",
+     "concepts": ["inverted-file-index", "product-quantization", "non-exhaustive-search"], "introduces": [],
+     "addresses": ["billion-scale-indexing", "search-accuracy"]},
+
+    {"slug": "rerank-source-coding", "title": "Searching in One Billion Vectors: Re-rank with Source Coding",
+     "concepts": ["product-quantization", "re-ranking", "inverted-file-index"], "introduces": ["re-ranking"],
+     "addresses": ["search-accuracy", "billion-scale-indexing"]},
+
+    {"slug": "nsw", "title": "Scalable Distributed Algorithm for Approximate Nearest Neighbor Search in High Dimensional General Metric Spaces",
+     "concepts": ["proximity-graph", "navigable-small-world", "greedy-graph-traversal"], "introduces": ["navigable-small-world"],
+     "addresses": ["search-accuracy", "query-latency"]},
+
+    {"slug": "hnsw", "title": "Efficient and Robust Approximate Nearest Neighbor Search Using Hierarchical Navigable Small World Graphs",
+     "concepts": ["proximity-graph", "hierarchical-layering", "navigable-small-world", "greedy-graph-traversal"],
+     "introduces": ["hierarchical-layering"],
+     "addresses": ["search-accuracy", "query-latency", "curse-of-dimensionality"]},
+
+    {"slug": "efanna", "title": "EFANNA: An Extremely Fast Approximate Nearest Neighbor Search Algorithm Based on kNN Graph",
+     "concepts": ["proximity-graph", "kd-tree", "greedy-graph-traversal"], "introduces": [],
+     "addresses": ["index-build-time", "query-latency"]},
+
+    {"slug": "nsg", "title": "Fast Approximate Nearest Neighbor Search With The Navigating Spreading-out Graph",
+     "concepts": ["proximity-graph", "greedy-graph-traversal"], "introduces": [],
+     "addresses": ["query-latency", "memory-footprint", "billion-scale-indexing"]},
+
+    {"slug": "graph-survey", "title": "A Comprehensive Survey and Experimental Comparison of Graph-Based Approximate Nearest Neighbor Search",
+     "concepts": ["proximity-graph", "greedy-graph-traversal", "navigable-small-world"], "introduces": [],
+     "addresses": ["search-accuracy", "query-latency"]},
+
+    {"slug": "diskann", "title": "DiskANN: Fast Accurate Billion-point Nearest Neighbor Search on a Single Node",
+     "concepts": ["proximity-graph", "disk-resident-index", "greedy-graph-traversal"], "introduces": ["disk-resident-index"],
+     "addresses": ["disk-vs-ram-constraint", "billion-scale-indexing", "memory-footprint"]},
+
+    {"slug": "faiss-gpu", "title": "Billion-Scale Similarity Search with GPUs",
+     "concepts": ["gpu-acceleration", "product-quantization", "inverted-file-index"], "introduces": ["gpu-acceleration"],
+     "addresses": ["query-latency", "billion-scale-indexing"]},
+
+    {"slug": "scann", "title": "Accelerating Large-Scale Inference with Anisotropic Vector Quantization",
+     "concepts": ["product-quantization", "inner-product", "re-ranking"], "introduces": [],
+     "addresses": ["search-accuracy", "query-latency"]},
+
+    {"slug": "spann", "title": "SPANN: Highly-efficient Billion-scale Approximate Nearest Neighbor Search",
+     "concepts": ["inverted-file-index", "disk-resident-index", "non-exhaustive-search"], "introduces": [],
+     "addresses": ["disk-vs-ram-constraint", "billion-scale-indexing", "memory-footprint"]},
+
+    {"slug": "bang", "title": "BANG: Billion-Scale Approximate Nearest Neighbor Search Using a Single GPU",
+     "concepts": ["gpu-acceleration", "proximity-graph"], "introduces": [],
+     "addresses": ["gpu-acceleration", "billion-scale-indexing", "query-latency"]},
+
+    {"slug": "ann-benchmarks", "title": "ANN-Benchmarks: A Benchmarking Tool for Approximate Nearest Neighbor Algorithms",
+     "concepts": [], "introduces": [],
+     "addresses": ["search-accuracy", "query-latency"]},
+
+    {"slug": "neurips21-challenge", "title": "Results of the NeurIPS'21 Challenge on Billion-Scale Approximate Nearest Neighbor Search",
+     "concepts": ["disk-resident-index", "gpu-acceleration"], "introduces": [],
+     "addresses": ["billion-scale-indexing"]},
+
+    {"slug": "high-dim-survey", "title": "Approximate Nearest Neighbor Search on High Dimensional Data - Experiments, Analyses, and Improvement",
+     "concepts": ["proximity-graph", "hash-bucket-index", "product-quantization"], "introduces": [],
+     "addresses": ["search-accuracy", "query-latency"]},
+
+    {"slug": "flann", "title": "Scalable Nearest Neighbor Algorithms for High Dimensional Data",
+     "concepts": ["kd-tree", "proximity-graph"], "introduces": [],
+     "addresses": ["query-latency", "index-build-time"]}
+  ],
+
+  "edges": [
+    {"src": "flann", "rel": "EXTENDS", "dst": "kdtree",
+     "evidence": "Uses multiple randomized kd-trees with automatic parameter/algorithm selection.", "confidence": "high"},
+
+    {"src": "datar-pstable", "rel": "EXTENDS", "dst": "indyk-motwani",
+     "evidence": "Concrete LSH family for Euclidean space building on the original LSH framework.", "confidence": "high"},
+    {"src": "andoni-indyk", "rel": "EXTENDS", "dst": "datar-pstable",
+     "evidence": "Improves the LSH exponent toward near-optimal for the same p-stable setting.", "confidence": "high"},
+    {"src": "multiprobe-lsh", "rel": "EXTENDS", "dst": "datar-pstable",
+     "evidence": "Adds probing of adjacent buckets on top of standard LSH to cut table count.", "confidence": "high"},
+    {"src": "multiprobe-lsh", "rel": "TRADES_OFF_AGAINST", "dst": "datar-pstable",
+     "improves": "memory-footprint", "at_cost_of": "query-latency",
+     "evidence": "Fewer hash tables (less memory) but each query probes multiple buckets (more work).", "confidence": "medium"},
+
+    {"src": "opq", "rel": "EXTENDS", "dst": "pq",
+     "evidence": "Adds a learned rotation before PQ's subspace split to reduce quantization error.", "confidence": "high"},
+    {"src": "lopq", "rel": "EXTENDS", "dst": "opq",
+     "evidence": "Applies optimized PQ locally per cluster rather than globally.", "confidence": "high"},
+    {"src": "additive-quant", "rel": "ALTERNATIVE_TO", "dst": "pq",
+     "evidence": "Represents vectors as a sum of codewords instead of a Cartesian product of subspace codes.", "confidence": "high"},
+    {"src": "additive-quant", "rel": "TRADES_OFF_AGAINST", "dst": "pq",
+     "improves": "search-accuracy", "at_cost_of": "index-build-time",
+     "evidence": "Richer codebook model lowers quantization error but makes encoding more expensive.", "confidence": "medium"},
+    {"src": "cartesian-kmeans", "rel": "ALTERNATIVE_TO", "dst": "opq",
+     "evidence": "Independently derived equivalent of jointly optimizing rotation and subspace codebooks.", "confidence": "medium"},
+    {"src": "inverted-multi-index", "rel": "EXTENDS", "dst": "pq",
+     "evidence": "Uses a product-quantized codebook to build a fine-grained inverted index over cells.", "confidence": "high"},
+    {"src": "revisiting-inverted", "rel": "EXTENDS", "dst": "inverted-multi-index",
+     "evidence": "Revisits and improves inverted-index designs for billion-scale ANN.", "confidence": "high"},
+    {"src": "rerank-source-coding", "rel": "EXTENDS", "dst": "pq",
+     "evidence": "Adds a re-ranking stage using source-coded residuals on top of PQ retrieval.", "confidence": "high"},
+
+    {"src": "hnsw", "rel": "EXTENDS", "dst": "nsw",
+     "evidence": "Adds a hierarchical multi-layer structure over NSW's flat navigable graph, giving logarithmic scaling.", "confidence": "high"},
+    {"src": "nsg", "rel": "EXTENDS", "dst": "nsw",
+     "evidence": "Builds a sparser navigating spreading-out graph refining the navigable small-world idea.", "confidence": "medium"},
+    {"src": "efanna", "rel": "EXTENDS", "dst": "nsw",
+     "evidence": "Uses kd-trees to build an initial kNN graph, then graph-based search.", "confidence": "medium"},
+    {"src": "nsg", "rel": "TRADES_OFF_AGAINST", "dst": "hnsw",
+     "improves": "memory-footprint", "at_cost_of": "index-build-time",
+     "evidence": "Sparser single-layer graph uses less memory than HNSW's layered graph but needs a costlier build.", "confidence": "medium"},
+
+    {"src": "hnsw", "rel": "ALTERNATIVE_TO", "dst": "pq",
+     "evidence": "Graph-based family vs quantization family; routinely benchmarked head-to-head.", "confidence": "high"},
+    {"src": "hnsw", "rel": "TRADES_OFF_AGAINST", "dst": "pq",
+     "improves": "search-accuracy", "at_cost_of": "memory-footprint",
+     "evidence": "Graph indexes keep full vectors + graph in RAM for high recall; PQ compresses at some recall cost.", "confidence": "medium"},
+
+    {"src": "diskann", "rel": "EXTENDS", "dst": "nsg",
+     "evidence": "Builds a Vamana graph (NSG-lineage) engineered to run from SSD.", "confidence": "medium"},
+    {"src": "diskann", "rel": "TRADES_OFF_AGAINST", "dst": "hnsw",
+     "improves": "memory-footprint", "at_cost_of": "query-latency",
+     "evidence": "Moves most of the index to SSD to cut RAM at the cost of disk I/O per query.", "confidence": "medium"},
+    {"src": "spann", "rel": "ALTERNATIVE_TO", "dst": "diskann",
+     "evidence": "Disk-based inverted-index approach to the same billion-scale/limited-RAM problem DiskANN targets with graphs.", "confidence": "medium"},
+    {"src": "faiss-gpu", "rel": "EXTENDS", "dst": "pq",
+     "evidence": "GPU implementation of IVF+PQ search at billion scale.", "confidence": "high"},
+    {"src": "scann", "rel": "ALTERNATIVE_TO", "dst": "pq",
+     "evidence": "Anisotropic vector quantization tuned for inner-product (MIPS) rather than standard PQ.", "confidence": "medium"},
+    {"src": "bang", "rel": "EXTENDS", "dst": "diskann",
+     "evidence": "Single-GPU billion-scale graph search in the DiskANN problem space.", "confidence": "medium"},
+
+    {"src": "charikar-simhash", "rel": "APPLIES", "dst": "cosine-similarity",
+     "evidence": "Hash collision probability tracks cosine similarity between vectors.", "confidence": "high"},
+    {"src": "faiss-gpu", "rel": "COMBINES", "dst": "inverted-file-index",
+     "evidence": "Combines IVF partitioning with PQ compression, GPU-accelerated.", "confidence": "high"}
+  ],
+
+  "taxonomy_gaps_found_during_annotation": [
+    "No explicit 'locality-sensitive-hashing' concept — LSH papers currently map to 'hash-bucket-index'. Consider adding it if you want LSH as a first-class concept.",
+    "No 'anisotropic-quantization' concept for ScaNN — mapped to product-quantization + inner-product for now.",
+    "'gpu-acceleration' appears both as a concept and (loosely) as a problem for BANG — pick one; concept is cleaner."
+  ]
+}
