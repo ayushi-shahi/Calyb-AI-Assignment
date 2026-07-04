@@ -1,75 +1,87 @@
 # approach.md
 
-## What I built
+## What this is
 
-A system that reasons over the approximate nearest neighbor (ANN) search literature. It takes a paper abstract it has never seen, places it within a hand-built knowledge graph of the field, and returns a structured novelty assessment: the closest prior work and *how* the new idea relates to it, which of its concepts are already well-covered versus apparently novel, which known tradeoff objections it will face, and a suggested reading path through the lineage it belongs to.
+I built a system that helps you place a new research paper within a field. You give it a paper's abstract — one it has never seen before — and it tells you where that idea fits: which existing papers are closest, how the new idea relates to them, what parts of it are genuinely new versus already well-covered, what objections it's likely to face, and what to read to understand the lineage it belongs to.
 
-The point isn't retrieval. A search engine over these papers would tell you which ones mention similar words. This tells you where a new idea *sits* in the field and why — which is what someone actually needs when they're trying to figure out if their contribution is new.
+The important part: this is not a search engine. A search would just find papers that use similar words. This tells you *where an idea sits in the field and why* — which is what you actually need when you're trying to figure out whether your contribution is new.
 
-## What subset of data I chose, and why
+I chose the field of **approximate nearest neighbor (ANN) search** — the algorithms behind vector search.
 
-I picked Domain B and scoped it tightly: **ANN search algorithms and index structures themselves**, not their downstream applications like RAG or recommendation. The corpus is 35 papers covering the field's core lineage — early exact methods and the dimensionality wall (KD-trees, LSH), the quantization/compression family (Product Quantization, OPQ, additive quantization), inverted-file methods (IVF, the inverted multi-index), the graph-based family (NSW, HNSW, NSG), and the modern disk/GPU/billion-scale work (DiskANN, SPANN, FAISS-GPU, ScaNN).
+## What data I used, and why
 
-Three reasons for this scope. It's a finite, densely interconnected cluster — these papers genuinely build on and compete with each other, which is what makes a relationship graph worth building instead of a pile of disconnected nodes. It has clear foundational anchors: PQ and NSW each root an entire sub-family, so questions like "what does this build on" and "what should I read first" have real answers. And I've done backend work with vector similarity and embedding-based retrieval, so I could annotate *why* two papers relate from actual understanding of the tradeoffs, not just guess from citations.
+I focused on ANN search algorithms and index structures themselves — not where they get used (like RAG or recommendation systems), just the core methods. The final set is 35 papers covering the main storyline of the field:
 
-On corpus size: I targeted around 55 papers but landed 35 usable ones after data-source constraints (rate limits and missing metadata on older conference papers). I decided that was fine and leaned into it. The assignment rewards relationship density over shallow coverage, and 35 papers I understand well, each with hand-annotated edges, is worth more than 100 I'd have annotated thinly or mechanically. Depth was the right trade here, not a consolation.
+- the early methods and why they broke down in high dimensions (KD-trees, LSH),
+- the compression family that shrinks vectors to save memory (Product Quantization and its descendants),
+- the inverted-file methods that only search part of the data,
+- the graph-based family that's dominant today (NSW, HNSW, NSG),
+- and the modern billion-scale and GPU work (DiskANN, SPANN, FAISS-GPU, ScaNN).
 
-## What entities and relationships I modeled, and the reasoning
+Why this scope? Three reasons.
 
-**The core idea:** a citation tells you two papers are connected but not *how*. The same citation edge could mean "background," "direct extension," "benchmark baseline," or "competing approach." Semantic Scholar hands you the citation skeleton for free. My contribution is the layer that assigns *meaning* to those connections, plus a concept and problem layer that citations don't capture at all.
+These papers actually build on and compete with each other, so there are real relationships to map — not just a pile of unconnected papers. The field also has clear starting points (Product Quantization and NSW each kick off a whole branch), so questions like "what does this build on?" have honest answers. And I've done backend work with vector similarity and embeddings myself, so I could judge *why* two papers relate from real understanding, instead of guessing from citations.
 
-**Entities:**
-- **Paper** — the primary node (title, year, venue, abstract, and its concept/problem tags).
-- **Concept** — a technique or primitive in ANN (proximity graph, product quantization, greedy traversal, and so on). 26 of them, hand-curated with my own definitions and grouped into five categories (index-structure, compression, search-strategy, distance-metric, hardware-optimization). This taxonomy is the part no citation graph or extraction tool gives you.
-- **Problem** — the recurring pain points papers try to solve (search accuracy, query latency, memory footprint, index build time, and so on). 8 of them. I deliberately separated these into two kinds: fundamental resource *axes* (accuracy, latency, memory, build time, update cost) and motivating *scenarios* (curse of dimensionality, billion-scale, disk-vs-RAM). The axes matter because they're what my tradeoff edges are built from.
-- **Author** — kept deliberately thin. Modeling author influence is a rabbit hole that doesn't serve the novelty-check task, so I chose not to build it.
+On the number of papers: I aimed for around 55 but ended up with 35 usable ones, mostly because older conference papers were hard to fetch cleanly. I decided that was fine. The assignment rewards depth of relationships over shallow breadth, and 35 papers I actually understand — each with hand-drawn connections — is worth more than 100 I'd have connected carelessly. I treated the smaller set as a choice, not a compromise.
 
-**Relationships** — this is the layer that's mine, not the API's:
-- `EXTENDS` — builds directly on a prior method's mechanism (HNSW extends NSW).
-- `TRADES_OFF_AGAINST` — my signature edge. Improves one axis at the cost of another versus a named baseline (HNSW trades memory for accuracy against PQ). It carries explicit `improves` and `at_cost_of` fields drawn from the problem axes. This edge encodes the single most important thing about this field — that graph-vs-quantization is fundamentally a recall-vs-memory decision — which a raw citation graph flattens completely.
-- `ALTERNATIVE_TO` — solves the same problem via a different family.
-- `COMBINES` — fuses two prior approaches (IVFADC combines IVF and PQ).
-- `INTRODUCES` / `APPLIES` / `ADDRESSES` — link papers to the concepts they originate or use and the problems they target.
+## The entities and relationships I modeled
 
-Every edge carries an **evidence** field (a short justification, ideally grounded in the paper) and a **confidence** level (`high` for textbook facts, `medium` for tradeoff judgments I'm inferring rather than quoting). The confidence field is deliberate honesty: it lets a reader see which relationships are asserted from the source and which are my domain inference, instead of pretending everything is equally certain.
+**The core idea behind the whole thing:** a citation tells you two papers are connected, but not *how*. One paper citing another could mean "this is background," or "we build directly on this," or "we beat this in our benchmarks," or "we disagree with this." Same citation, completely different meanings. Semantic Scholar gives you the raw citations for free. My real work is the layer on top that says what each connection actually *means* — plus a layer of concepts and problems that citations don't capture at all.
 
-There's also one **derived** relationship I compute rather than annotate: `IS_FOUNDATIONAL_FOR`, where a paper introduces a concept and has a high in-degree of EXTENDS edges pointing at it. On this corpus that surfaces PQ and NSW — correctly, since those are the two papers everything downstream builds on. Notably HNSW does *not* come out as foundational here, because my scoped corpus includes its ancestors and its alternatives but few of its direct descendants. That's a faithful reflection of the authored edges rather than the paper's general reputation, and I think it's the right behavior — the graph should report what it actually contains.
+**The things in the graph (entities):**
 
-## How the representation was built, and the tradeoffs
+- **Papers** — the main nodes.
+- **Concepts** — the techniques and ideas in ANN (proximity graph, product quantization, greedy search, and so on). There are 26, and I wrote every definition myself, grouped into five families (index structures, compression, search strategies, distance metrics, hardware tricks). This is exactly the part no tool can hand you.
+- **Problems** — the recurring pains these papers try to solve (accuracy, speed, memory, build time, and so on). There are 8. I split them into two kinds on purpose: the resource *tradeoffs* you're always balancing (accuracy vs. speed vs. memory), and the bigger *situations* driving the work (high dimensions, billion-scale data). The tradeoff ones matter because my most important relationship type is built from them.
+- **Authors** — kept minimal on purpose. Modeling who-influences-whom is a whole project of its own and doesn't help the main task, so I skipped it.
 
-I fetched paper metadata from the Semantic Scholar API (with an arXiv fallback for abstracts that were missing), then annotated everything by hand against my own schema. No automated entity or relationship extraction — the concept definitions, the edge types, and every individual edge are mine. LLM assistance was used for scaffolding and code, not for deciding the modeling.
+**The connections (relationships)** — this is the layer that's mine, not the API's:
 
-Key tradeoffs I made:
+- **EXTENDS** — builds directly on an earlier method (HNSW extends NSW).
+- **TRADES_OFF_AGAINST** — my most important one. Says a paper improves one thing at the cost of another, compared to a specific rival (HNSW gets better accuracy than Product Quantization, but uses more memory). It captures the single biggest truth in this field — that graph methods vs. compression methods is really a *memory vs. accuracy* choice — which raw citations completely miss.
+- **ALTERNATIVE_TO** — solves the same problem a different way.
+- **COMBINES** — merges two earlier ideas.
+- **INTRODUCES / APPLIES / ADDRESSES** — link papers to the concepts they invented or used, and the problems they tackle.
 
-- **Structure-first, embeddings-second.** Only 20 of the 35 papers have abstracts available (older conference papers often have none in any open source). Rather than let that break the system, I built matching to run primarily on the concept tags I hand-assigned to *every* paper, with abstract similarity as an optional bonus. This turned out to be the better design anyway — it leans on the hand-built structure the assignment cares about instead of on embeddings, and it degrades gracefully. A paper with no abstract still participates fully through its concepts and edges.
-- **NetworkX in-memory, not a graph database.** At 35 papers, Neo4j would add setup friction for a reviewer and buy nothing analytically.
-- **Abstract-level, not full-text.** Full-text parsing is a time sink, and the abstract plus my annotations is enough to place a paper.
-- **The knowledge state is a single flat JSON file**, readable and navigable without running any code — you can open `knowledge/knowledge_state.json` and see every paper, concept, problem, and edge directly.
+Every connection carries a short note explaining *why* I drew it, plus a confidence level — "high" when it's a plain fact from the paper, "medium" when it's my own judgment about a tradeoff. I did that on purpose: it lets anyone reading see which relationships are solid facts and which are my inference, instead of pretending everything is equally certain.
 
-## How the system works when a new input arrives
+There's also one relationship the system works out on its own rather than me drawing it: **IS_FOUNDATIONAL_FOR** — a paper counts as foundational if it introduced a concept and lots of later papers build on it. On my set, that correctly surfaces Product Quantization and NSW, the two papers everything else grows out of. Interestingly, HNSW does *not* show up as foundational — because my corpus has HNSW's ancestors and its rivals, but not many of its direct descendants. I think that's the right behavior: the graph should report what it actually contains, not what's famous in general.
 
-A new abstract goes through three stages:
+## How I built it, and the tradeoffs I made
 
-1. **Match** (`reason/match.py`) — the abstract is scored against every concept and problem using keyword/phrase matching over concept names and definitions (with light stemming so "neighbor"/"neighbors" collapse, and phrase matching so multi-word concept names count as units). Concepts are weighted by an IDF-style factor so that generic concepts appearing across most papers count for less than distinctive ones. Embedding similarity is layered on if `sentence-transformers` is available, but the system works fully without it.
-2. **Rank** (`reason/engine.py`) — this is where the reasoning happens, over graph structure rather than similarity. Each candidate paper is scored on three graph-derived signals: whether it's foundational for a strongly-matched concept, how close it sits (in EXTENDS hops) to a foundational paper for those concepts, and its own concept overlap with the abstract. Crucially, the foundational and lineage bonuses are weighted *per concept by how strongly the abstract matched that specific concept* — so a paper doesn't get credit for being foundational on an axis the new abstract isn't even about.
-3. **Assemble** (`reason/novelty.py`) — the structured output: placement, closest prior work with the nature of each relation, overlapping-vs-novel concepts, known objections (surfaced from TRADES_OFF_AGAINST edges on the axis the abstract claims to improve), and a reading path traced through EXTENDS chains.
+I pulled paper details from the Semantic Scholar API (falling back to arXiv when abstracts were missing), then connected everything by hand using my own schema. No automatic extraction tools — every concept definition and every connection is mine. I used AI help for writing the plumbing code, not for any of the modeling decisions.
 
-Everything in the output is derivable from the graph. An LLM could rephrase the result into prose, but it makes none of the decisions — the placement and ranking are graph traversal and edge semantics, not generation.
+The main tradeoffs:
 
-I validated this on held-out papers not in the corpus. A GPU graph-index paper (CAGRA, 2023) surfaces the graph/disk lineage — NSW, HNSW, DiskANN, BANG — at the top, with a NSW->NSG->DiskANN reading path. A graph-routing paper (Probabilistic Routing, 2024) surfaces DiskANN and the graph family. Both land in the right neighborhood, which is the real test.
+- **Structure first, embeddings second.** Only 20 of the 35 papers even have abstracts available (older ones often don't, anywhere). So instead of relying on abstract text, I built the matching to run mainly on the concept tags I assigned to *every* paper by hand, with abstract similarity as an optional extra. This turned out better anyway — it leans on the hand-built structure, which is the whole point, and it still works fine for a paper with no abstract.
+- **Simple in-memory graph, not a database.** For 35 papers, a heavy graph database would just add setup pain for whoever runs this, with no real benefit.
+- **Abstracts, not full papers.** Parsing full PDFs is a big time sink, and the abstract plus my own tags is enough to place a paper.
+- **One readable file for the knowledge.** The whole graph exports to a single JSON file you can open and read directly — every paper, concept, problem, and connection — without running any code.
 
-**Getting the ranking right was iterative, and worth being honest about.** The first version had four distinct failures I diagnosed and fixed in turn: naive tokenization missed plural/suffix variants; a flat foundational bonus let an incidental weak match outrank a strong central one; a top-k truncation silently zeroed the score of relevant papers just below a cutoff; and generic boilerplate concepts were weighted like distinctive ones, which IDF fixed — until IDF over-rewarded singleton concepts (a concept tagged on exactly one paper), which I floored. Each fix was a principled method, not a magic-number tweak, and each revealed the next. That progression is itself the honest picture of building a ranking function over a small hand-curated graph.
+## What happens when you give it a new paper
 
-## The limits, honestly
+Three steps:
 
-- **Keyword matching has a ceiling.** On a 35-paper corpus with many singleton concepts, the exact #1 ranking is sensitive to surface-form overlap. The system reliably surfaces the right *family*, but the precise top position can wobble. Embedding-based matching is the clean fix and is the first thing I'd add.
-- **The foundational signal reflects the corpus, not the field.** HNSW doesn't register as foundational here because I didn't include its descendants — a scoping consequence, not a bug, but worth naming.
-- **Abstract coverage is partial** (20/35), which limits the embedding signal until those are backfilled.
-- **Taxonomy gaps I noticed while annotating.** While hand-annotating, I hit three spots where my taxonomy was slightly too coarse: LSH papers currently fold into a generic "hash-bucket-index" concept rather than having "locality-sensitive-hashing" as a first-class concept; ScaNN's anisotropic quantization maps onto product-quantization + inner-product rather than its own concept; and "gpu-acceleration" ended up straddling the concept and problem layers before I settled it as a concept. None broke the graph, but they're the natural next refinements to the schema and a sign of where a second annotation pass would tighten things.
+1. **Match** — it reads the new abstract and figures out which concepts and problems it's about, using keyword and phrase matching (with a little normalization so "neighbor" and "neighbors" count as the same word). Common, generic concepts are weighted down so distinctive ones matter more. If the embeddings library is installed it uses that too, but it works fine without it.
+2. **Rank** — this is where the actual reasoning happens, using the *graph* rather than word similarity. Each candidate paper is scored on whether it's foundational for a concept the new paper strongly cares about, how close it sits to a foundational paper in the "builds on" chain, and how much it overlaps in concepts. The key detail: a paper only gets credit for being foundational on the topics the new paper is *actually about* — not for being important in some unrelated corner.
+3. **Assemble** — it packages the result: where the paper fits, the closest prior work and how each one relates, what's overlapping vs. new, the objections it'll likely face (pulled straight from the tradeoff connections), and a reading path along the "builds on" chain.
 
-## What I'd build next, and why
+Everything in that output comes from the graph. An AI could rewrite it into nicer prose, but it makes none of the decisions — the placement and ranking are pure graph logic.
 
-1. **Embeddings for matching.** This closes the bag-of-words ceiling directly — semantic similarity would catch a quantization paper that says "compact codes" instead of "quantization," which keyword matching misses. Biggest single improvement for the effort.
-2. **Extend the corpus with HNSW's direct descendants.** This would let the foundational signal reflect HNSW's real central role, and generally deepen the graph-family lineage.
-3. **Densify the OUTPERFORMS_ON edges** from results tables, which I kept sparse for time — these would make the "known objections" output sharper by grounding it in actual benchmark head-to-heads.
-4. **A second reasoning flow** (reading-path-first, for onboarding) reusing the same graph — nearly free once the structure exists.
+I tested this on papers that aren't in the corpus at all. A 2023 GPU graph paper (CAGRA) correctly surfaces the graph/disk family — NSW, HNSW, DiskANN — and traces a NSW → NSG → DiskANN reading path. A 2024 graph-routing paper lands on DiskANN and the graph family. Both end up in the right neighborhood, which is the real test.
+
+**Getting the ranking right took several honest rounds.** My first version had four separate problems, and I fixed them one at a time: word endings weren't being matched; a "foundational" bonus was too blunt and let unrelated famous papers win; a cutoff was silently dropping relevant papers; and generic filler concepts were counting as much as meaningful ones. Each fix was a real, named technique — not just fiddling with numbers — and each one exposed the next. That back-and-forth is the honest story of building a ranking system on a small, hand-made graph.
+
+## Where it falls short (honestly)
+
+- **Keyword matching has a ceiling.** On a small corpus, the exact #1 result can shift based on surface wording. It reliably finds the right *family* of papers, but the precise top spot can wobble. Real embeddings are the clean fix, and the first thing I'd add.
+- **"Foundational" reflects my corpus, not the whole field.** HNSW doesn't register as foundational only because I didn't include its descendants — a scoping choice, not a bug, but worth being upfront about.
+- **Only 20 of 35 papers have abstracts,** which limits the optional embedding path until the rest are filled in.
+- **A few taxonomy gaps I noticed while annotating.** Hand-labeling surfaced three spots where my concept list was a bit too coarse: LSH papers fold into a generic "hash bucket" concept instead of having their own; ScaNN's special quantization gets mapped to nearby concepts rather than its own; and "GPU acceleration" briefly straddled being a concept and a problem before I settled it as a concept. None of these broke anything — they're just the obvious next things a second pass would tidy up.
+
+## What I'd build next
+
+1. **Real embeddings for matching** — the biggest single upgrade. It would catch a paper that says "compact codes" when my concept is called "quantization," which keyword matching misses today.
+2. **Add HNSW's descendants to the corpus** — so the "foundational" signal reflects HNSW's real importance, and the graph family gets deeper.
+3. **Fill in more "beats this in benchmarks" connections** — I kept these sparse for time; more of them would make the objections output sharper.
+4. **A second mode focused on reading paths** for someone new to the field — nearly free to add, since the graph is already there.
